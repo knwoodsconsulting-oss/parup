@@ -1,0 +1,15 @@
+{
+  "name": "parup",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:local": "wrangler d1 execute parup-db --local --file=./schema.sql",
+    "db:seed:local": "wrangler d1 execute parup-db --local --file=./seed.sql"
+  },
+  "devDependencies": {
+    "wrangler": "^4.40.0"
+  }
+}
