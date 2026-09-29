@@ -1,0 +1,152 @@
+<!doctype html><html><head>
+<meta name="description" content="ParUp — bar inventory, weekly pars, sales usage and smart ordering for MIK Restaurant & Lounge.">
+<meta name="theme-color" content="#111111">
+<meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>ParUp — MIK Test Shell</title><style>
+:root{--ink:#181714;--cream:#f7f1e8;--card:#fffaf4;--wine:#78373d;--gold:#b99355;--muted:#746d63;--line:#ded2c2;--green:#365b48;--amber:#8b5b22}*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--cream);color:var(--ink)}header{background:#171714;color:white;padding:26px 5vw 22px;display:flex;justify-content:space-between;align-items:end;gap:20px}.brand h1{font-family:Georgia,serif;font-size:44px;margin:0}.brand p{margin:5px 0 0;color:#d6cabb}.pill{border:1px solid #5d574d;border-radius:999px;padding:9px 13px;color:#ead9b8;font-size:13px}nav{padding:14px 5vw;background:#211f1b;display:flex;gap:8px;position:sticky;top:0;z-index:3}nav button{border:0;border-radius:999px;padding:10px 16px;background:#35312a;color:white;font-weight:700;cursor:pointer}nav button.active{background:var(--gold);color:#181714}main{padding:28px 5vw 60px;max-width:1350px;margin:auto}.page{display:none}.page.active{display:block}.hero{display:grid;grid-template-columns:1.6fr 1fr;gap:20px}.panel,.metric{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px}.hero h2{font-family:Georgia,serif;font-size:38px;margin:0 0 8px}.sub{color:var(--muted)}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 0}.metric b{display:block;font-size:28px;margin-top:7px}.metric span{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}.tag{display:inline-block;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:700;background:#eee3d2;margin:3px}.tag.good{background:#dfece4;color:var(--green)}.tag.warn{background:#f5e5ca;color:var(--amber)}table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:11px 8px;border-bottom:1px solid #eadfce;text-align:left}th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}input,select{width:100%;padding:9px;border:1px solid var(--line);border-radius:10px;background:white}.btn{border:0;border-radius:12px;background:var(--wine);color:white;padding:11px 15px;font-weight:800;cursor:pointer}.btn.secondary{background:#2f2d28}.drop{border:2px dashed #c9b89f;border-radius:20px;padding:42px;text-align:center;background:#fffaf4}.drop input{max-width:400px}.callout{border-left:5px solid var(--gold);padding:13px 16px;background:#fff7e9;border-radius:10px;margin:12px 0}.small{font-size:12px;color:var(--muted)}h3{font-family:Georgia,serif;font-size:25px;margin:0 0 12px}@media(max-width:800px){.hero,.grid2,.metrics{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}header{align-items:start}.brand h1{font-size:36px}table{font-size:12px}}
+</style>
+<style>
+.brand-client-mark{display:flex;justify-content:flex-end;align-items:center;padding:10px 18px 0}
+.brand-client-mark img{width:92px;max-height:48px;object-fit:contain}
+.knw-credit{margin-top:34px;padding:22px 18px;border-top:1px solid rgba(255,255,255,.10);display:flex;align-items:center;justify-content:center;gap:14px;text-align:left}
+.knw-credit img{width:52px;height:52px;object-fit:contain}
+.knw-credit .credit-copy{font-size:11px;line-height:1.45;opacity:.72}
+.knw-credit .credit-copy b{display:block;font-size:12px;opacity:1;margin-bottom:2px}
+@media(max-width:700px){.brand-client-mark img{width:72px}.knw-credit{padding-bottom:28px}}
+</style>
+
+</head><body><div class="brand-client-mark"><img src="assets/mik-logo.png" alt="MIK Restaurant and Lounge"></div><header><div class='brand'><div class='small' style='color:#d2bd98'>MEN IN KITCHEN · BAR OPERATIONS</div><h1>ParUp</h1><p>Know what you have. Know what moved. Know what to order.</p></div><div class='pill'>TEST SHELL · V1</div></header><nav id='nav'><button onclick="show('settings',this)">⚙️ Admin Settings</button></nav><main>
+<section id='dashboard' class='page active'><div class='hero'><div class='panel'><h2>Your bar, without the mystery.</h2><p class='sub'>Weekly inventory + Toast sales intelligence. You set the par. ParUp helps you see what moved and what needs attention.</p><div class='callout'><b>Core rule:</b> ParUp recommends. It never silently changes your par.</div></div><div class='panel'><h3>This week's rhythm</h3><p>① Count open + sealed bottles</p><p>② Import Toast sales export</p><p>③ Map anything new</p><p>④ Review order suggestions</p></div></div><div class='metrics'><div class='metric'><span>Bar Items Inventoried</span><b id='skuCount'>0</b></div><div class='metric'><span>Needs Ordered</span><b id='belowCount'>0</b></div><div class='metric'><span>Full Bottles</span><b id='wholeCount'>0</b></div><div class='metric'><span>Estimated Order</span><b id='orderCost'>$0</b></div></div><div class='grid2'><div class='panel'><h3>Order suggestions</h3><div id='suggestions'></div></div><div class='panel'><h3>✨ Worth a look</h3><div id='insights'></div></div></div></section>
+<section id='inventory' class='page'><div class='panel'><h3>Inventory</h3><p class='sub'>Each bar item and size is tracked separately. Open/in use + sealed = on hand. Weekly par is what you want to start the week with.</p><div style='overflow:auto'><table><thead><tr><th>Category</th><th>Bottle</th><th>Expression</th><th>Size</th><th>Cost</th><th>Open</th><th>Sealed</th><th>On Hand</th><th>Par</th><th>Order</th><th>Sold As</th></tr></thead><tbody id='inventoryRows'></tbody></table></div><button class='btn' onclick='addRow()' style='margin-top:14px'>+ Add item</button></div></section>
+<section id='import' class='page'><div class='panel'><h3>Import Toast sales</h3><p class='sub'>V1 shell accepts CSV for the interactive demo. XLSX parsing is the next build step; the UI/logic is already laid out.</p><div class='drop'><h3>📥 Drop in the weekly Toast export</h3><p>Choose a CSV export and ParUp will read unique menu items and quantities.</p><input id='salesFile' type='file' accept='.csv'><br><button class='btn' onclick='importCSV()' style='margin-top:14px'>Import sales</button><div id='importResult' style='margin-top:18px'></div></div></div></section>
+<section id='mapping' class='page'><div class='panel'><h3>Toast Mapping</h3><p class='sub'>Teach ParUp once. New/weird Toast buttons land here instead of being guessed.</p><table><thead><tr><th>Toast Item</th><th>Maps To</th><th>Sale Type</th><th>Usage</th><th>Status</th></tr></thead><tbody id='mappingRows'></tbody></table></div></section>
+<section id='report' class='page'><div class='panel'><h3>Weekly Report</h3><p class='sub'>The cute report card becomes meaningful after sales are imported and mappings are confirmed.</p>
+<div style='display:flex;justify-content:center;margin:18px 0 22px'><button class='btn secondary' onclick="document.getElementById('weeklyNumbers').scrollIntoView({behavior:'smooth',block:'center'})">📊 Weekly Numbers</button></div>
+<div id='weeklyNumbers' class='metrics' style='grid-template-columns:repeat(4,1fr);margin-bottom:24px'>
+<div class='metric'><span>Sales Activity</span><b>247</b><div class='small'>sample Toast rows</div></div>
+<div class='metric'><span>Full Bottles Sold</span><b>9</b><div class='small'>sample week</div></div>
+<div class='metric'><span>Needs Ordered</span><b>8</b><div class='small'>sample units</div></div>
+<div class='metric'><span>Top Pour Mover</span><b style='font-size:20px'>Hennessy</b><div class='small'>sample data</div></div>
+</div>
+<div class='grid2'><div><h3>Notable</h3><p class='sub'>The things management should actually notice this week.</p><div id='reportCards'></div></div><div><h3>Large-format opportunities</h3><p class='sub'>For heavy pour movers, ParUp can compare 750 mL against Southern's available large-format option once costs arrive.</p><div class='callout'>🥃 <b>Hennessy VS</b><br><span class='small'>High pour volume. Compare current 750 mL cost per pour against Southern's available large format.</span></div><div class='callout'>🥃 <b>1800 Reposado</b><br><span class='small'>Strong enough pour volume to keep on the large-format comparison list once distributor costs are loaded.</span></div></div></div></div></section>
+
+<section id="settings" class="page">
+  <div class="pagehead">
+    <div>
+      <h2>Admin Settings</h2>
+      <p>Set the house rules once. ParUp uses them everywhere else.</p>
+    </div>
+    <span class="pill">ADMIN ONLY</span>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>🍸 Pour Standards</h3>
+      <p class="small">Used to translate Toast sales into estimated inventory usage.</p>
+      <label>Standard liquor pour (oz)</label>
+      <input id="setPour" type="number" step=".25" value="1.5">
+      <label>Double pour (oz)</label>
+      <input id="setDouble" type="number" step=".25" value="2.25">
+      <label>Wine glass pour (oz)</label>
+      <input id="setWine" type="number" step=".25" value="6">
+    </div>
+
+    <div class="card">
+      <h3>📦 Inventory Defaults</h3>
+      <p class="small">Controls how new items behave when you add them.</p>
+      <label>Default sold as</label>
+      <select id="setSoldAs">
+        <option>Pour</option>
+        <option>Whole Bottle</option>
+        <option>Both</option>
+        <option selected>Counted Item</option>
+      </select>
+      <label>Default weekly par</label>
+      <input id="setPar" type="number" min="0" value="2">
+      <label>Low stock warning at</label>
+      <select id="setLow">
+        <option selected>Below weekly par</option>
+        <option>50% of weekly par</option>
+        <option>Only when out of stock</option>
+      </select>
+    </div>
+
+    <div class="card">
+      <h3>🥤 Item Types</h3>
+      <p class="small">Keeps liquor, wine, mixers and grab-and-go items simple without forcing the same count method on everything.</p>
+      <label><input type="checkbox" checked> Liquor</label><br>
+      <label><input type="checkbox" checked> Wine / Champagne</label><br>
+      <label><input type="checkbox" checked> Mixers / Juice</label><br>
+      <label><input type="checkbox" checked> Bottled Water</label><br>
+      <label><input type="checkbox" checked> Energy Drinks / Cans</label>
+    </div>
+
+    <div class="card">
+      <h3>💰 Purchasing Intelligence</h3>
+      <p class="small">ParUp can flag better buying options without changing your order automatically.</p>
+      <label><input type="checkbox" checked> Show large-format savings opportunities</label><br>
+      <label><input type="checkbox" checked> Suggest par adjustments</label><br>
+      <label><input type="checkbox" checked> Show estimated order cost</label><br>
+      <label><input type="checkbox" checked> Flag items that need mapping/review</label>
+    </div>
+
+    <div class="card">
+      <h3>🧾 Toast Import Rules</h3>
+      <p class="small">Mapping stays remembered after you teach ParUp what a Toast item means.</p>
+      <label>Unrecognized Toast items</label>
+      <select>
+        <option selected>Send to Needs Review</option>
+        <option>Ignore until mapped</option>
+      </select>
+      <label>Whole bottle sales</label>
+      <select>
+        <option selected>Use explicit mapping only</option>
+      </select>
+      <p class="small">ParUp will never guess a full-bottle sale from price alone.</p>
+    </div>
+
+    <div class="card">
+      <h3>🏪 Bar Profile</h3>
+      <label>Location / Bar Name</label>
+      <input value="Men in the Kitchen">
+      <label>Inventory week starts</label>
+      <select>
+        <option selected>Monday</option><option>Tuesday</option><option>Wednesday</option>
+        <option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
+      </select>
+      <label>Primary distributor</label>
+      <input value="Southern">
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:18px">
+    <b>🔒 Test-shell behavior</b><br>
+    <span class="small">These controls are here so you can judge the admin experience. In the production build, settings will save to the account and feed inventory, mapping and weekly-report calculations.</span>
+  </div>
+  <button style="margin-top:16px" onclick="alert('Test shell: settings look saved ✨')">Save Settings</button>
+</section>
+
+</main><script>
+const inventory=[
+['Tequila','Don Julio','Reposado','750 mL','',1,3,7,'Both'],['Tequila','Don Julio','Reposado','375 mL','',0,1,7,'Whole Bottle'],['Whiskey','Crown Royal','Apple','750 mL','',1,2,5,'Both'],['Whiskey','Crown Royal','Peach','750 mL','',1,1,5,'Both'],['Wine','Elmo Pio','Moscato','750 mL','',1,2,5,'Both'],['Tequila','Patrón','Silver','750 mL','',1,4,7,'Both'],['Tequila','Casamigos','Blanco','750 mL','',1,1,2,'Both'],['Tequila','Casamigos','Reposado','750 mL','',1,1,2,'Both'],['Cognac','Hennessy','VS','750 mL','',2,3,7,'Both'],['Champagne','Moët & Chandon','Nectar Impérial Rosé','750 mL','72',0,2,2,'Whole Bottle'],['Vodka','Tito’s','','750 mL','',2,4,7,'Both'],['Wine','Cavit','Pinot Grigio','750 mL','',1,3,5,'Both'],['Tequila','1800','Reposado','750 mL','',1,2,5,'Pour'],['Tequila','Cuervo','Especial','750 mL','',1,2,5,'Pour'],['Whiskey','Jack Daniel’s','','750 mL','',1,2,5,'Pour']];
+const pages=['dashboard','inventory','import','mapping','report'];const labels=['Dashboard','Inventory','Import Sales','Toast Mapping','Weekly Report'];const nav=document.getElementById('nav');pages.forEach((p,i)=>{let b=document.createElement('button');b.textContent=labels[i];b.className=i===0?'active':'';b.onclick=()=>show(p,b);nav.appendChild(b)});function show(p,b){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(p).classList.add('active');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active')}
+function render(){let tb=document.getElementById('inventoryRows');tb.innerHTML='';inventory.forEach((r,i)=>{let on=(+r[5]||0)+(+r[6]||0),need=Math.max(0,(+r[7]||0)-on);let tr=document.createElement('tr');tr.innerHTML=`<td>${r[0]}</td><td><b>${r[1]}</b></td><td>${r[2]}</td><td>${r[3]}</td><td><input value='${r[4]}' onchange='inventory[${i}][4]=this.value;summary()'></td><td><input type='number' min='0' step='.25' value='${r[5]}' onchange='inventory[${i}][5]=this.value;render()'></td><td><input type='number' min='0' value='${r[6]}' onchange='inventory[${i}][6]=this.value;render()'></td><td><b>${on}</b></td><td><input type='number' min='0' value='${r[7]}' onchange='inventory[${i}][7]=this.value;render()'></td><td>${need?`<span class='tag warn'>${need}</span>`:`<span class='tag good'>OK</span>`}</td><td>${r[8]}</td>`;tb.appendChild(tr)});summary()}
+function summary(){document.getElementById('skuCount').textContent=inventory.length;let below=0,whole=0,cost=0,s=[];inventory.forEach(r=>{let on=(+r[5]||0)+(+r[6]||0),need=Math.max(0,(+r[7]||0)-on);if(need){below++;s.push(`${r[1]} ${r[2]} ${r[3]} — order ${need}`);cost+=need*(+r[4]||0)}if(r[8].includes('Whole')||r[8]==='Both')whole++});document.getElementById('belowCount').textContent=below;document.getElementById('wholeCount').textContent=whole;document.getElementById('orderCost').textContent='$'+cost.toFixed(2);document.getElementById('suggestions').innerHTML=s.slice(0,8).map(x=>`<div class='callout'>🛒 ${x}</div>`).join('')||'<p class="sub">Everything is at par.</p>';document.getElementById('insights').innerHTML=`<div class='callout'>🍾 <b>Whole bottle tracking is enabled.</b><br><span class='small'>Different package sizes are tracked separately.</span></div><div class='callout'>💰 <b>Large-format comparison ready.</b><br><span class='small'>Hennessy + 1800 placeholders are waiting on Southern sizes/costs.</span></div>`}
+function addRow(){inventory.push(['Other','New Bottle','','750 mL','',0,0,2,'Pour']);render()}
+let mappings=[['Don Julio','Don Julio Reposado 750 mL','Pour','1.5 oz','Mapped'],['Don Julio Reposado','Don Julio Reposado 750 mL','Pour','1.5 oz','Mapped'],['Don Julio Bottle','Don Julio Reposado 750 mL','Whole Bottle','1 bottle','Mapped'],['Cavit Pinot Grigio','Cavit Pinot Grigio 750 mL','Pour','6 oz','Mapped'],['Cavit Pinot Grigio Bottle','Cavit Pinot Grigio 750 mL','Whole Bottle','1 bottle','Mapped'],['Unmapped Toast Item','','Needs Review','—','Review']];function renderMap(){document.getElementById('mappingRows').innerHTML=mappings.map(m=>`<tr><td><b>${m[0]}</b></td><td>${m[1]||'—'}</td><td>${m[2]}</td><td>${m[3]}</td><td><span class='tag ${m[4]==='Mapped'?'good':'warn'}'>${m[4]}</span></td></tr>`).join('')}
+function importCSV(){let f=document.getElementById('salesFile').files[0];if(!f){document.getElementById('importResult').innerHTML='<span class="tag warn">Choose a CSV first</span>';return}let rd=new FileReader();rd.onload=()=>{let lines=rd.result.split(/\r?\n/).filter(Boolean),head=lines[0].split(',');let unique=new Set();lines.slice(1).forEach(l=>{let c=l.match(/("[^"]*(?:""[^"]*)*"|[^,]*)(?:,|$)/g)||[];let first=(c[0]||'').replace(/,$/,'').replace(/^"|"$/g,'');if(first)unique.add(first)});document.getElementById('importResult').innerHTML=`<span class='tag good'>Imported ${Math.max(0,lines.length-1)} rows</span> <span class='tag'>${unique.size} unique first-column items</span><p class='small'>Test shell only: final importer will detect Toast columns rather than assuming the first column.</p>`};rd.readAsText(f)}
+function report(){document.getElementById('reportCards').innerHTML=`
+<div class='callout'><b>📈 Don Julio Reposado moved hard</b><br>39 regular pours · 4 doubles · 2 full bottles.<br><span class='small'>Estimated usage: 4.7 bottles · On hand: 4 · Weekly par: 7 · Order 3.</span></div>
+<div class='callout'><b>🍷 Pinot Grigio is outrunning par</b><br>17 glasses · 3 full bottles.<br><span class='small'>Estimated usage: 7.0 bottles against a weekly par of 5. Worth watching before changing par.</span></div>
+<div class='callout'><b>🍾 Full bottle service moved 9 bottles</b><br><span class='small'>2 Don Julio Repo · 2 Hennessy · 1 Tito’s · 1 Casamigos Repo · 3 Cavit Pinot Grigio.</span></div>
+<div class='callout'><b>🛒 8 units need ordered</b><br><span class='small'>Estimated order cost will populate as distributor unit costs are added.</span></div>
+<div class='callout'><b>👀 No automatic par changes</b><br><span class='small'>ParUp surfaces the pattern; management decides whether the par should move.</span></div>`}render();renderMap();report();
+</script>
+<footer class="knw-credit">
+  <img src="assets/knw-icon.png" alt="KNW Creative & Consulting">
+  <div class="credit-copy">
+    <b>Designed &amp; developed by KNW Creative &amp; Consulting</b>
+    Strategy · Systems · Storytelling
+  </div>
+</footer>
+
+</body></html>
