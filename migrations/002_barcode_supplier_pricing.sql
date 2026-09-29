@@ -1,67 +1,7 @@
+-- ParUp V1.1 migration. Safe to run more than once.
+-- NOTE: The Worker also creates these tables automatically on first API request.
 PRAGMA foreign_keys = ON;
 
-CREATE TABLE IF NOT EXISTS settings (
-  key TEXT PRIMARY KEY,
-  value TEXT NOT NULL,
-  updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS inventory (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  category TEXT NOT NULL DEFAULT 'Other',
-  brand TEXT NOT NULL,
-  expression TEXT DEFAULT '',
-  size TEXT DEFAULT '750 mL',
-  unit_cost REAL DEFAULT 0,
-  open_qty REAL DEFAULT 0,
-  sealed_qty REAL DEFAULT 0,
-  weekly_par REAL DEFAULT 2,
-  sold_as TEXT DEFAULT 'Pour',
-  distributor TEXT DEFAULT 'Southern',
-  item_type TEXT DEFAULT 'Liquor',
-  large_format_eligible INTEGER DEFAULT 0,
-  notes TEXT DEFAULT '',
-  active INTEGER DEFAULT 1,
-  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-  updated_at TEXT DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS mappings (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  toast_item TEXT NOT NULL UNIQUE,
-  inventory_id INTEGER,
-  sale_type TEXT NOT NULL DEFAULT 'Needs Review',
-  usage_amount REAL DEFAULT 0,
-  usage_unit TEXT DEFAULT 'oz',
-  status TEXT DEFAULT 'Review',
-  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-  updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY(inventory_id) REFERENCES inventory(id) ON DELETE SET NULL
-);
-
-CREATE TABLE IF NOT EXISTS imports (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  file_name TEXT,
-  week_label TEXT,
-  imported_at TEXT DEFAULT CURRENT_TIMESTAMP,
-  row_count INTEGER DEFAULT 0
-);
-
-CREATE TABLE IF NOT EXISTS sales (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  import_id INTEGER NOT NULL,
-  toast_item TEXT NOT NULL,
-  quantity REAL DEFAULT 0,
-  net_sales REAL DEFAULT 0,
-  raw_json TEXT DEFAULT '{}',
-  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY(import_id) REFERENCES imports(id) ON DELETE CASCADE
-);
-
-CREATE INDEX IF NOT EXISTS idx_sales_import ON sales(import_id);
-CREATE INDEX IF NOT EXISTS idx_sales_item ON sales(toast_item);
-
--- V1.1: barcode + supplier-price + receiving history.
 CREATE TABLE IF NOT EXISTS inventory_barcodes (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   inventory_id INTEGER NOT NULL,

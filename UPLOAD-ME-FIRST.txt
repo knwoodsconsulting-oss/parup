@@ -1,0 +1,13 @@
+PARUP V1.1 DROP-IN
+
+UPLOAD THESE TO YOUR EXISTING GITHUB REPO:
+  public/index.html
+  src/index.js
+  schema.sql
+  migrations/002_barcode_supplier_pricing.sql
+
+DO NOT OVERWRITE wrangler.jsonc.
+Your live wrangler file contains your real Cloudflare D1 database ID and public workers.dev setting.
+
+After you commit to main, Cloudflare should redeploy automatically.
+No D1 Console paste is required: the Worker creates the new V1.1 tables automatically on first API load.
