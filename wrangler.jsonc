@@ -5,6 +5,6 @@
   "compatibility_date": "2026-09-29",
   "assets": { "directory": "./public", "binding": "ASSETS", "not_found_handling": "single-page-application" },
   "d1_databases": [
-    { "binding": "DB", "database_name": "parup-db", "database_id": "REPLACE_WITH_D1_DATABASE_ID" }
+    { "binding": "DB", "database_name": "parup-db", "database_id": "44518e7d-7a64-4efe-a06b-38a9b229455f" }
   ]
 }
