@@ -1,6 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "parup",
+  "workers_dev": true,
   "main": "src/index.js",
   "compatibility_date": "2026-09-29",
   "assets": { "directory": "./public", "binding": "ASSETS", "not_found_handling": "single-page-application" },
